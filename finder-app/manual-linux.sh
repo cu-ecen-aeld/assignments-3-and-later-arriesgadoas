@@ -67,7 +67,7 @@ mkdir -p var/log
 cd "$OUTDIR"
 if [ ! -d "${OUTDIR}/busybox" ]
 then
-git clone https://git.busybox.net/busybox #git://busybox.net/busybox.git
+git clone git://git.busybox.net/busybox #git://busybox.net/busybox.git
     cd busybox
     git checkout ${BUSYBOX_VERSION}
 # TODO:  Configure busybox 
