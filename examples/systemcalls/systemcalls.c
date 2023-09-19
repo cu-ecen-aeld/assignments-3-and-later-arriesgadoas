@@ -16,7 +16,17 @@ bool do_system(const char *cmd)
  *   and return a boolean true if the system() call completed with success
  *   or false() if it returned a failure
 */
+    int ret;
+    ret = system(cmd);
 
+    if (ret == -1)
+    {
+        printf("Error do_system");
+    	//exit(1);
+    	return false;
+    }
+    
+    //exit(0);
     return true;
 }
 
@@ -40,11 +50,14 @@ bool do_exec(int count, ...)
     va_start(args, count);
     char * command[count+1];
     int i;
+    pid_t pid;
+    
     for(i=0; i<count; i++)
     {
         command[i] = va_arg(args, char *);
     }
     command[count] = NULL;
+
     // this line is to avoid a compile warning before your implementation is complete
     // and may be removed
     command[count] = command[count];
@@ -58,7 +71,60 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+    // char * second_arg[count];
+    // char * addr = command[0];
+    // //printf("arg[0]: %s\n", command[0]);
+    // for(j = 1; j < (count); j++)
+    // {
+    // 	second_arg[j-1] = command[j];
+    //     //printf("arg[%d]: %s\n", j,second_arg[j-1]);
+    // }
 
+    // second_arg[count-1] = NULL;
+
+    // printf("addr: %s \n", addr);
+
+    // for(j = 0; j < count; j++)
+    // {
+    //     printf("sec_arg[%d]: %s\n", j, second_arg[j]);
+    // }
+
+    fflush(stdout);
+    pid = fork();
+
+    if(pid == -1)
+    {
+        exit(EXIT_FAILURE);
+    }
+
+    if(pid == 0)
+    {
+        // This is a child process
+        int execv_ret = execv(command[0], command);
+
+        //printf("execv_ret:  %d\n", execv_ret);
+        if(execv_ret == -1)
+        {   
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    else
+    {
+        int status;
+        if(wait(&status) == -1)
+        {
+            exit(EXIT_FAILURE);
+        }
+        if (WIFEXITED(status)) 
+        {
+            // The child process exited normally
+            if(WEXITSTATUS(status) == EXIT_FAILURE)
+            {
+                return false;
+            }
+        } 
+    }
     va_end(args);
 
     return true;
@@ -75,6 +141,9 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     va_start(args, count);
     char * command[count+1];
     int i;
+
+    int fd, pid;
+
     for(i=0; i<count; i++)
     {
         command[i] = va_arg(args, char *);
@@ -84,7 +153,6 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     // and may be removed
     command[count] = command[count];
 
-
 /*
  * TODO
  *   Call execv, but first using https://stackoverflow.com/a/13784315/1446624 as a refernce,
@@ -92,7 +160,54 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
+   
+    fd = open(outputfile, O_CREAT | O_RDWR, 0666);
 
+    if (fd == -1)
+    {
+        return false;
+    }
+
+    fflush(stdout);
+    pid = fork();
+
+    if(pid == -1)
+    {
+        exit(EXIT_FAILURE);
+    }
+
+    if(pid == 0)
+    {   
+        dup2(fd, STDOUT_FILENO);
+
+        close(fd);
+        // This is a child process
+        if(execv(command[0], command) != 0) // use true to handle other possible values
+        {
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    else
+    {
+        int status;
+        if(wait(&status) == -1)
+        {
+            exit(EXIT_FAILURE);
+        }
+        if (WIFEXITED(status)) 
+        {
+            // The child process exited normally
+            int exitStatus = WEXITSTATUS(status);
+            //printf("Child process exited with status %d\n", exitStatus);
+            if(exitStatus == EXIT_FAILURE)
+            {
+                return false;
+            }
+        } 
+    }
+
+    
     va_end(args);
 
     return true;
