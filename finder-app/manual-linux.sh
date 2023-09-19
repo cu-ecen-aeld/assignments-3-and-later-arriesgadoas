@@ -26,6 +26,21 @@ fi
 
 mkdir -p ${OUTDIR}
 
+mkdir -p ${OUTDIR}/files
+
+cp ld-linux-aarch64.so.1 ${OUTDIR}/files/ld-linux-aarch64.so.1
+cp libm.so.6 ${OUTDIR}/files/libm.so.6
+cp libresolv.so.2 ${OUTDIR}/files/libresolv.so.2
+cp libc.so.6 ${OUTDIR}/files/libc.so.6
+
+cp writer ${OUTDIR}/files/writer
+cp finder.sh ${OUTDIR}/files/finder.sh
+cp ../conf/username.txt ${OUTDIR}/files/username.txt
+cp ../conf/assignment.txt ${OUTDIR}/files/assignment.txt
+cp finder-test.sh ${OUTDIR}/files/finder-test.sh
+cp autorun-qemu.sh ${OUTDIR}/files/autorun-qemu.sh
+
+
 cd "$OUTDIR"
 if [ ! -d "${OUTDIR}/linux-stable" ]; then
     #Clone only if the repository does not exist.
@@ -88,10 +103,11 @@ ${CROSS_COMPILE}readelf -a busybox | grep "program interpreter"
 ${CROSS_COMPILE}readelf -a busybox | grep "Shared library"
 
 # TODO: Add library dependencies to rootfs
-cp ${SYSROOT}/lib/ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib/ld-linux-aarch64.so.1
-cp ${SYSROOT}/lib64/libm.so.6 ${OUTDIR}/rootfs/lib64/libm.so.6
-cp ${SYSROOT}/lib64/libresolv.so.2 ${OUTDIR}/rootfs/lib64/libresolv.so.2
-cp ${SYSROOT}/lib64/libc.so.6 ${OUTDIR}/rootfs/lib64/libc.so.6
+cd ${OUTDIR}/files
+cp ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib/ld-linux-aarch64.so.1
+cp libm.so.6 ${OUTDIR}/rootfs/lib64/libm.so.6
+cp libresolv.so.2 ${OUTDIR}/rootfs/lib64/libresolv.so.2
+cp libc.so.6 ${OUTDIR}/rootfs/lib64/libc.so.6
 
 # TODO: Make device nodes
 cd ${OUTDIR}/rootfs
@@ -99,17 +115,17 @@ sudo mknod -m 666 dev/null c 1 3
 sudo mknod -m 600 dev/console c 5 1
 
 # TODO: Clean and build the writer utility
-cd $ASSIGNMENT_DIR/finder-app/
 mkdir -p $OUTDIR/rootfs/home/conf
-make clean
-make CROSS_COMPILE
+#make clean
+#make CROSS_COMPILE
 
 # # TODO: Copy the finder related scripts and executables to the /home directory
 # # on the target rootfs
+cd ${OUTDIR}/files
 cp writer ${OUTDIR}/rootfs/home/writer
 cp finder.sh ${OUTDIR}/rootfs/home/finder.sh
-cp ../conf/username.txt ${OUTDIR}/rootfs/home/conf/username.txt
-cp ../conf/assignment.txt ${OUTDIR}/rootfs/home/conf/assignment.txt
+cp username.txt ${OUTDIR}/rootfs/home/conf/username.txt
+cp assignment.txt ${OUTDIR}/rootfs/home/conf/assignment.txt
 cp finder-test.sh ${OUTDIR}/rootfs/home/finder-test.sh
 cp autorun-qemu.sh ${OUTDIR}/rootfs/home/autorun-qemu.sh
 
