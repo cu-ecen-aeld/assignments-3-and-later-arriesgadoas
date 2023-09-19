@@ -6,7 +6,7 @@ set -e
 set -u
 
 OUTDIR=/tmp/aeld
-KERNEL_REPO=https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+KERNEL_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git #https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
 SYSROOT=~/arm-cross-compiler/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu/libc
 KERNEL_VERSION=v5.1.10
 BUSYBOX_VERSION=1_33_1
