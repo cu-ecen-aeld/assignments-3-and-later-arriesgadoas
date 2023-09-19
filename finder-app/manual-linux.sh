@@ -28,6 +28,9 @@ mkdir -p ${OUTDIR}
 
 mkdir -p ${OUTDIR}/files
 
+make clean
+make CROSS_COMPILE
+
 cp ld-linux-aarch64.so.1 ${OUTDIR}/files/ld-linux-aarch64.so.1
 cp libm.so.6 ${OUTDIR}/files/libm.so.6
 cp libresolv.so.2 ${OUTDIR}/files/libresolv.so.2
