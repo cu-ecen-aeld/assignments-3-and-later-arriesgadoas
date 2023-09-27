@@ -40,9 +40,9 @@ void* threadfunc(void* thread_param)
         }
     }
 
-    pthread_exit(thread_param);
+    //pthread_exit(thread_param);
  
-    //return thread_func_args;
+    return thread_func_args;
 
 }
 
