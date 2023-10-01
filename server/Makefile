@@ -1,21 +1,22 @@
-CROSS_COMPILER = aarch64-none-linux-gnu-
-
-CC = gcc
+#AARCH_64_CC = aarch64-none-linux-gnu-gcc
+CC = aarch64-none-linux-gnu-gcc
+#CC = gcc
 
 CFLAGS = -Wall
 
 SRC = aesdsocket.c
 
-EXEC = aesdsocket
+EXEC = aesdsocket 
 
-all: $(EXEC)
+OBJ = $(SRC:.c=.o)
 
-$(EXEC): $(SRC)
-	${CROSS_COMPILER}gcc $(CFLAGS) -o $(EXEC) $(SRC)
+$(EXEC):$(SRC)
+	$(CC) $(CFLAGS) -c $(SRC) -o $(OBJ)
+	$(CC) $(OBJ) -o $(EXEC)
+
+#CROSS_COMPILE:$(SRC)
+#	$(AARCH_64_CC) $(CFLAGS) -c $(SRC) -o $(OBJ)
+#	$(AARCH_64_CC) $(OBJ) -o $(EXEC)
 
 clean:
-	rm -f $(EXEC)
-
-.PHONY: all clean
-
-
+	rm -f  $(OBJ) $(EXEC)
