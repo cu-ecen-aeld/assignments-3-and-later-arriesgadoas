@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
         }
         if (pid > 0) {
             // Parent process exits, leaving the daemon running
-            return 0;
+            return 0; // this is the part that makes the process an orphan
         }
         // Child process continues as a daemon
         setsid();  // Create a new session
