@@ -1,4 +1,4 @@
-CROSS_COMPILER = arm64-none-linux-gnu-
+CROSS_COMPILER = aarch64-none-linux-gnu-
 
 CC = gcc
 
@@ -11,7 +11,7 @@ EXEC = aesdsocket
 all: $(EXEC)
 
 $(EXEC): $(SRC)
-	${CROSS_COMPILER}$(CC) $(CFLAGS) -o $(EXEC) $(SRC)
+	${CROSS_COMPILER}-gcc $(CFLAGS) -o $(EXEC) $(SRC)
 
 clean:
 	rm -f $(EXEC)
