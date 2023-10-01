@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
         inet_ntop(client_addr.ss_family, get_in_addr((struct sockaddr *)&client_addr), client_ip, sizeof(client_ip));
 
         // Connection established
-        printf("Connection accepted from %s\n", client_ip);
+        //printf("Connection accepted from %s\n", client_ip);
         syslog(LOG_INFO, "Accepted connection from %s\n", client_ip);
 
         // Receive and write data from the client in chunks
