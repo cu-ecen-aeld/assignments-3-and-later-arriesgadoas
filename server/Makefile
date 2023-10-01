@@ -1,4 +1,4 @@
-CROSS_COMPILER = aarch64-none-linux-gnu-
+CROSS_COMPILER = arm64-none-linux-gnu-
 
 CC = gcc
 
