@@ -11,7 +11,7 @@ EXEC = aesdsocket
 all: $(EXEC)
 
 $(EXEC): $(SRC)
-	${CROSS_COMPILER}-gcc $(CFLAGS) -o $(EXEC) $(SRC)
+	${CROSS_COMPILER}gcc $(CFLAGS) -o $(EXEC) $(SRC)
 
 clean:
 	rm -f $(EXEC)
